@@ -31,6 +31,9 @@ python lrnrisk_prototype.py --gtdb gtdb_example/gtdbtk.bac120.summary.tsv --viru
 ## lrnrisk_logo.jpg
 LRNRisk logo (displayed when users open HTML output file)
 
+## test.html
+Sample output file produced by LRNRisk
+
 ## lrnrisk_prototype_blacklist.tsv
 "Blacklisted genes"; used to flag a user-supplied genome as "high-risk" if one or more genes is detected in the query genome; supplied as input to `lrnrisk_prototype.py --blacklist`
 
