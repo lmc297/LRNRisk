@@ -1,0 +1,1 @@
+python lrnrisk_prototype.py --gtdb gtdb_example/gtdbtk.bac120.summary.tsv --virulence pima_example/pima_output/vfdb_core.fasta.tabular --amr pima_example/pima_output/AMR_pima_md_2023_02_02.fasta.tabular --blacklist lrnrisk_prototype_blacklist.tsv --vf_distribution vfdb_dist_beta_80p80q.tsv --amr_distribution resfinder_dist_beta_80p80q.tsv --output test.html
