@@ -1,0 +1,1 @@
+blastn  -query [assembled_genome.fasta] -subject [feature_database] -task 'blastn' -evalue '1e-10' -out [feature.tabular] -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore nident qlen' -num_threads "${GALAXY_SLOTS:-8}" -strand both -dust yes -perc_identity '95.0'
