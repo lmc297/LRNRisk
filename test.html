@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+img {
+  width: 25%; 
+}
+hr {
+  height: 4px;
+  background-color:#000000;
+  opcaity: 0.5;
+}
+body {
+  font-family: Arial;
+}
+#results {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#results td, #results th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#results tr:nth-child(even){background-color: #f2f2f2;}
+
+#results tr:hover {background-color: #ddd;}
+
+#results th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #00B0F0;
+  color: white;
+}
+
+#blacklistresults {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#blacklistresults td, #blacklistresults th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#blacklistresults tr:nth-child(even){background-color: #f2f2f2;}
+
+#blacklistresults tr:hover {background-color: #ddd;}
+
+#blacklistresults th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #C43E96;
+  color: white;
+}
+
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: #f1f1f1;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+.sidebar a {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.sidebar a.active {
+  background-color: #00B0F0;
+  color: white;
+}
+
+.sidebar a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+}
+
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 1000px;
+}
+
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+}
+</style>
+</head>
+</head>
+<body>
+<img src="lrnrisk_logo.jpg" alt="LRNRisk Logo">
+<hr>
+
+<!-- The sidebar -->
+<div class="sidebar">
+  <a class="active" href="#home">Home</a> 
+  <a href="#blacklist">Blacklisted Genes</a>
+  <a href="#gtdb">GTDB Species</a>
+  <a href="#vfdb">VFDB Virulence Factors</a>
+  <a href="#amr">Pima AMR Genes</a>
+  <a href="#disclaimer">Disclaimer</a>
+</div>
+
+<!-- Page content -->
+<div class="content">
+
+<h1 id="home"><i>LRNRisk</i> Results for test</h1>
+<h2 id="blacklist">Blacklisted Genes</h2>
+<p align=justify style="background-color:#FDF0F6;
+border-radius:4px;
+font-size:36px;
+padding:15px;
+margin:5px;">
+<b>ALERT! HIGH-RISK GENOME!</b> The following BLACKLISTED GENES were detected:
+</p>
+<table id="blacklistresults">
+<tr>
+<th>Blacklisted Gene</th>
+<th>Reason</th>
+</tr>
+
+<tr>
+<td><i>cya</i></td>
+<td>ANTHRAX TOXIN</td>
+</tr>
+<tr>
+<td><i>lef</i></td>
+<td>ANTHRAX TOXIN</td>
+</tr>
+<tr>
+<td><i>pagA</i></td>
+<td>ANTHRAX TOXIN</td>
+</tr>
+</table>
+<p align=justify style="background-color:#EEF4FB;
+border-radius:4px;
+font-size:16px;
+padding:15px;
+margin:5px;">
+<b>What does this mean?</b> LRNRisk identified one or more genes in the query genome, which have been "blacklisted" by the CDC and/or LRNRisk developers due to their public health risk. <b>Strains harboring one or more blacklisted genes should be treated as potentially dangerous, high-risk pathogens.</b>
+</p>
+
+<p align=justify style="background-color:#FDF0F6;
+border-radius:4px;
+font-size:36px;
+padding:15px;
+margin:5px;">
+<b>ALERT! BLACKLISTED GENE(S) DETECTED! THIS IS A PREDICTED HIGH-RISK GENOME! PROCEED WITH EXTREME CAUTION!</b>
+</p>
+
+<h2 id="gtdb">GTDB Species</h2>
+<table id="results">
+<tr>
+<th>Genome</th>
+<th>GTDB Species</th>
+</tr>
+
+<tr>
+<td>test</td>
+<td><i>Bacillus_A tropicus</i></td>
+</tr>
+</table>
+<p align=justify style="background-color:#EEF4FB;
+border-radius:4px;
+font-size:16px;
+padding:15px;
+margin:5px;">
+<b>What does this mean?</b> The query genome was assigned to the corresponding species using the Genome Taxonomy Database (GTDB) Toolkit (GTDB-Tk). GTDB-Tk assigns genomes to species within the GTDB taxonomy, a standardized, species-level taxonomy for prokaryotes.
+<br>
+<b>References:</b>
+<br>
+&#x2022; Chaumeil, et al. 2020. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7703759/">GTDB-Tk: a toolkit to classify genomes with the Genome Taxonomy Database.</a> <i>Bioinformatics</i> 36(6):1925-1927. doi: 10.1093/bioinformatics/btz848.
+<br>
+&#x2022; Parks, et al. 2022. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8728215/">GTDB: an ongoing census of bacterial and archaeal diversity through a phylogenetically consistent, rank normalized and complete genome-based taxonomy</a>. <i>Nucleic Acids Research</i> 50(D1): D785–D794. doi: 10.1093/nar/gkab776.
+</p>
+
+<p align=justify style="background-color:#FFFCF4;
+border-radius:4px;
+font-size:16px;
+padding:15px;
+margin:5px;">
+<b>WARNING! Always interpret species names with care.</b> Pathogen misidentifications can result (and have resulted) from misinterpretation of GTDB species labels. <b>GTDB species labels should be considered holistically with other LRNRisk strain attributes to assess risk</b> (e.g., blacklisted genes, virulence factors).
+<br>
+<b>References:</b>
+<br>
+&#x2022; Carroll, et al. 2022. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9423903/">Laboratory Misidentifications Resulting from Taxonomic Changes to <i>Bacillus cereus</i> Group Species, 2018–2022.</a> <i>Emerging Infectious Diseases</i> 28(9): 1877–1881. doi: 10.3201/eid2809.220293.
+</p>
+
+<h2 id="vfdb">VFDB Virulence Factors</h2>
+<table id="results">
+<tr>
+<th>Gene</th>
+<th>Contig</th>
+<th>% Identity</th>
+<th>% Coverage</th>
+<th>E-Value</th>
+<th>Annotation</th>
+<th>Comparison to Publicly Available Genomes</th>
+</tr>
+
+<tr>
+<td><i>BAS3109</i></td>
+<td>contig_2</td>
+<td>99.805</td>
+<td>100.13</td>
+<td>0.0</td>
+<td>(BAS3109) thiol-activated cytolysin [ALO (VF0534)] [Bacillus anthracis str. Sterne]</td>
+<td>Gene <i>BAS3109</i> has been detected in 100.0% of <i>Bacillus_A tropicus</i> genomes (109 of 109 genomes queried)</td>
+</tr>
+<tr>
+<td><i>cya</i></td>
+<td>contig_1</td>
+<td>99.297</td>
+<td>100.58</td>
+<td>0.0</td>
+<td>(cya) calmodulin sensitive adenylate cyclase edema factor [Anthrax toxin (VF0142)] [Bacillus anthracis str. Sterne]</td>
+<td>Gene <i>cya</i> has been detected in 7.34% of <i>Bacillus_A tropicus</i> genomes (8 of 109 genomes queried)</td>
+</tr>
+<tr>
+<td><i>inhA</i></td>
+<td>contig_2</td>
+<td>99.792</td>
+<td>100.17</td>
+<td>0.0</td>
+<td>(inhA) immune inhibitor A metalloprotease [InhA (VF0536)] [Bacillus anthracis str. Sterne]</td>
+<td>Gene <i>inhA</i> has been detected in 100.0% of <i>Bacillus_A tropicus</i> genomes (109 of 109 genomes queried)</td>
+</tr>
+<tr>
+<td><i>lef</i></td>
+<td>contig_1</td>
+<td>99.671</td>
+<td>100.21</td>
+<td>0.0</td>
+<td>(lef) anthrax toxin lethal factor precursor [Anthrax toxin (VF0142)] [Bacillus anthracis str. Sterne]</td>
+<td>Gene <i>lef</i> has been detected in 5.5% of <i>Bacillus_A tropicus</i> genomes (6 of 109 genomes queried)</td>
+</tr>
+<tr>
+<td><i>nheA</i></td>
+<td>contig_2</td>
+<td>95.365</td>
+<td>100.34</td>
+<td>0.0</td>
+<td>(nheA) non-hemolytic enterotoxin A [Nhe (VF0533)] [Bacillus cereus ATCC 10987]</td>
+<td>Gene <i>nheA</i> has been detected in 99.08% of <i>Bacillus_A tropicus</i> genomes (108 of 109 genomes queried)</td>
+</tr>
+<tr>
+<td><i>nheB</i></td>
+<td>contig_2</td>
+<td>95.458</td>
+<td>100.17</td>
+<td>0.0</td>
+<td>(nheB) non-hemolytic enterotoxin B [Nhe (VF0533)] [Bacillus cereus ATCC 10987]</td>
+<td>Gene <i>nheB</i> has been detected in 100.0% of <i>Bacillus_A tropicus</i> genomes (109 of 109 genomes queried)</td>
+</tr>
+<tr>
+<td><i>pagA</i></td>
+<td>contig_1</td>
+<td>99.608</td>
+<td>100.09</td>
+<td>0.0</td>
+<td>(pagA) anthrax toxin moiety protective antigen [Anthrax toxin (VF0142)] [Bacillus anthracis str. Sterne]</td>
+<td>Gene <i>pagA</i> has been detected in 7.34% of <i>Bacillus_A tropicus</i> genomes (8 of 109 genomes queried)</td>
+</tr>
+</table>
+<p align=justify style="background-color:#EEF4FB;
+border-radius:4px;
+font-size:16px;
+padding:15px;
+margin:5px;">
+<b>What does this mean?</b> One or more genes within the Virulence Factor Database (VFDB) core database were detected in the query genome. According to <a href="http://www.mgc.ac.cn/VFs/main.htm">VFDB</a>, virulence factors are genes "that enable a microorganism to establish itself on or within a host of a particular species and enhance its potential to cause disease. Virulence factors include bacterial toxins, cell surface proteins that mediate bacterial attachment, cell surface carbohydrates and proteins that protect a bacterium, and hydrolytic enzymes that may contribute to the pathogenicity of the bacterium."
+<br>
+<b>References:</b>
+<br>
+&#x2022; Liu, et al. 2022. <a href="https://pubmed.ncbi.nlm.nih.gov/34850947/">VFDB 2022: a general classification scheme for bacterial virulence factors.</a> <i>Nucleic Acids Research</i> 50(D1):D912-D917. doi: 10.1093/nar/gkab1107.
+<br>
+&#x2022; Chen, et al. 2005. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC539962/">VFDB: a reference database for bacterial virulence factors.</a> <i>Nucleic Acids Research</i> 33(Database Issue): D325–D328. doi: 10.1093/nar/gki008.
+</p>
+
+<p align=justify style="background-color:#FFFCF4;
+border-radius:4px;
+font-size:16px;
+padding:15px;
+margin:5px;">
+<b>WARNING! Always interpret VFDB results with caution.</b> The presence of VFDB virulence factors does not necessarily indicate increased risk (e.g., VFDB contains stress response genes, genes involved in nutrient metabolism); likewise, novel virulence factors may not be detected. To help assess risk, consider:<br>
+1) <b>The function of the virulence factor</b> (see the "Annotation" column in the table above)<br>
+2) <b>Other attributes reported by LRNRisk (e.g., blacklisted genes, GTDB species)</b>
+
+<h2 id="amr">Pima AMR Genes</h2>
+<table id="results">
+<tr>
+<th>Gene</th>
+<th>Contig</th>
+<th>% Identity</th>
+<th>% Coverage</th>
+<th>E-Value</th>
+<th>Annotation</th>
+<th>Comparison to Publicly Available Genomes</th>
+</tr>
+
+<tr>
+<td><i>fosB2_1</i></td>
+<td>contig_2</td>
+<td>99.526</td>
+<td>100.48</td>
+<td>0.0</td>
+<td>fosB2~~~Fosfomycin</td>
+<td>WARNING: Gene <i>fosB2_1</i> (fosB2~~~Fosfomycin) has never been detected in species <i>Bacillus_A tropicus</i> (<i>n</i> = 109 genomes queried)! Interpret with caution!</td>
+</tr>
+</table>
+<p align=justify style="background-color:#EEF4FB;
+border-radius:4px;
+font-size:16px;
+padding:15px;
+margin:5px;">
+<b>What does this mean?</b> One or more antimicrobial resistance (AMR) determinants were detected within the query genome via the CDC's Pima pipeline. Pima is a bioinformatic pipeline, which was developed by the CDC "to perform rapid <i>de novo</i> genome and plasmid assemblies, to detect AMR variants and genes, and to identify variants (mismatches and indels)."
+<br>
+<b>References:</b>
+<br>
+&#x2022; Gargis, et al. 2019. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6751186/">Rapid Detection of Genetic Engineering, Structural Variation, and Antimicrobial Resistance Markers in Bacterial Biothreat Pathogens by Nanopore Sequencing</a> <i>Scientific Reports</i> 9: 13501. doi: 10.1038/s41598-019-49700-1.
+
+<p align=justify style="background-color:#FFFCF4;
+border-radius:4px;
+font-size:16px;
+padding:15px;
+margin:5px;">
+<b>WARNING! Always interpret Pima AMR results with caution.</b> Detected AMR determinants may not confer phenotypic AMR; likewise, novel AMR determinants may not be detected.
+
+<h2 id="disclaimer">Disclaimer</h2>
+<p align=justify style="background-color:#F0F8F5;
+border-radius:4px;
+font-size:16px;
+padding:15px;
+margin:5px;">
+<b>Disclaimer:</b> LRNRisk aims to rapidly identify potential bacterial pathogens and provide insight into their potential public health risk. However, no tool is perfect, and LRNRisk cannot definitively prove whether an isolate is pathogenic or not. As always, interpret your results with caution. We are not responsible for taxonomic misclassifications, misclassifications of an isolate's pathogenic potential, and/or misinterpretations (biological, statistical, or otherwise) of LRNRisk results.
+
+</div>
+</body>
+</html>
