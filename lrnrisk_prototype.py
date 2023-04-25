@@ -6,12 +6,14 @@ import sys, os, glob
 def get_gtdb(f):
 
 	# get GTDB species
+	# assumes there is one genome in the GTDB-Tk output file
 	with open(f, "r") as infile:
 		for line in infile:
 			if "user_genome" not in line:
 				gname = line.split("\t")[0].strip()
 				tax = line.split("\t")[1].strip()
 				tax = tax.split(";")[-1].strip()
+				# split on GTDB species tag
 				tax = tax.split("s__")[1].strip()
 				if len(tax) == 0:
 					tax = "(Unknown Species)"
@@ -20,6 +22,7 @@ def get_gtdb(f):
 def get_blast(f):
 
 	# reads genes detected via BLAST
+	# BLAST header is as follows:
 	# qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore nident qlen
 	d = {}
 	with open(f, "r") as infile:
@@ -30,6 +33,7 @@ def get_blast(f):
 			alen = line.split("\t")[3].strip()
 			e = line.split("\t")[-4].strip()
 			qlen = line.split("\t")[-1].strip()
+			# calculate query coverage by dividing alignment length by query length
 			qcov = round(float(alen)/float(qlen)*100.0, 2)
 
 			if gene not in d.keys():
@@ -41,7 +45,10 @@ def get_blast(f):
 def get_blacklist(v, b):
 
 	# identify high-risk isolates based on blacklisted genes
-
+	# blacklisted genes file contains two columns:
+	# column 0 = the gene name as it appears in the gene database
+	# column 1 = the reason why the gene was blacklisted, which will be reported
+	# e.g., "ANTHRAX TOXIN"
 	bdict = {}
 	with open(b, "r") as infile:
 		for line in infile:
@@ -60,7 +67,16 @@ def get_blacklist(v, b):
 def gene_dist(f, blast, gtdb):
 
 	# get within-species prevalence of genes
+	# for virulence factors (VFs): uses VFDB VFs detected via ABRicate's VFDB db
+	# for AMR genes: uses AMR genes detected via ABRicate's ResFinder db
+	# for VFs and AMR genes: genes were detected via ABRicate XXX
+	# minimum nucleotide identity and coverage values >=80%
+	# total of 61,161 genomes queried
+	# takes VFDB or AMR gene distribution file as input (f)
+	# BLAST file of VFDB or AMR genes (blast)
+	# GTDB species (gtdb)
 	
+	# create dictionaries based on gene distribution
 	d = {}
 	annd = {}
 	gtdbd = {}
@@ -76,6 +92,8 @@ def gene_dist(f, blast, gtdb):
 			d[tax + "___" + gene] = line.strip()
 			annd[gene] = ann
 			gtdbd[tax] = denom
+	
+	# parse BLAST results
 	finallines = []
 	for key in blast.keys():
 		blastval = blast[key]
@@ -108,10 +126,15 @@ def gene_dist(f, blast, gtdb):
 def print_html(blacklist, vfdist, amrdist, fname, gtdb):
 
 	# print LRNRisk HTML report
-	
+	# takes detected blacklisted genes as input (blacklist)
+	# takes distribution of virulence factors as input (vfdist)
+	# takes distribution of AMR genes as input (amrdist)
+	# takes path to output file as input (fname)
+	# takes GTDB species as input (GTDB)
 	prefix = fname.split("/")[-1].strip()
 	prefix = prefix.split(".html")[0].strip()
 
+	# header for all files
 	html_header = """<!DOCTYPE html>
 <html>
 <head>
@@ -243,8 +266,10 @@ div.content {
 <div class="content">
 """
 
+	# title based on genome name
 	html_title = '<h1 id="home"><i>LRNRisk</i> Results for {0}</h1>'.format(prefix)
 
+	# prints this if blacklisted gene(s) are detected
 	html_blacklist_true = """<h2 id="blacklist">Blacklisted Genes</h2>
 <p align=justify style="background-color:#FDF0F6;
 border-radius:4px;
@@ -260,6 +285,7 @@ margin:5px;">
 </tr>
 """
 
+	# prints this if blacklisted gene(s) are detected
 	html_blacklist_true_boxes = """<p align=justify style="background-color:#EEF4FB;
 border-radius:4px;
 font-size:16px;
@@ -277,6 +303,7 @@ margin:5px;">
 </p>
 """
 
+	# prints this if blacklisted gene(s) are NOT detected
 	html_blacklist_false = """<h3>No blacklisted genes detected. Genome is not predicted to be high-risk.</h3>
 <p align=justify style="background-color:#EEF4FB;
 border-radius:4px;
@@ -287,6 +314,7 @@ margin:5px;">
 </p>
 """
 
+	# prints this for GTDB results
 	gtdb_header = """<h2 id="gtdb">GTDB Species</h2>
 <table id="results">
 <tr>
@@ -295,6 +323,7 @@ margin:5px;">
 </tr>
 """
 
+	# prints this for GTDB results
 	gtdb_box = """<p align=justify style="background-color:#EEF4FB;
 border-radius:4px;
 font-size:16px;
@@ -322,6 +351,7 @@ margin:5px;">
 </p>
 """
 
+	# prints this for VFDB and AMR genes
 	gene_header = """<table id="results">
 <tr>
 <th>Gene</th>
@@ -334,7 +364,7 @@ margin:5px;">
 </tr>
 """
 
-	
+	# prints this if VFDB VFs are detected
 	vfdb_box_true = """<p align=justify style="background-color:#EEF4FB;
 border-radius:4px;
 font-size:16px;
@@ -359,6 +389,7 @@ margin:5px;">
 2) <b>Other attributes reported by LRNRisk (e.g., blacklisted genes, GTDB species)</b>
 """
 
+	# prints this if VFDB VFs are NOT detected
 	vfdb_box_false = """<p align=justify style="background-color:#EEF4FB;
 border-radius:4px;
 font-size:16px;
@@ -374,6 +405,7 @@ margin:5px;">
 </p>
 """
 
+	# prints this if AMR genes are detected
 	amr_box_true = """<p align=justify style="background-color:#EEF4FB;
 border-radius:4px;
 font-size:16px;
@@ -393,6 +425,7 @@ margin:5px;">
 <b>WARNING! Always interpret Pima AMR results with caution.</b> Detected AMR determinants may not confer phenotypic AMR; likewise, novel AMR determinants may not be detected.
 """
 
+	# prints this if AMR genes are NOT detected
 	amr_box_false= """<p align=justify style="background-color:#EEF4FB;
 border-radius:4px;
 font-size:16px;
@@ -405,6 +438,7 @@ margin:5px;">
 &#x2022; Gargis, et al. 2019. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6751186/">Rapid Detection of Genetic Engineering, Structural Variation, and Antimicrobial Resistance Markers in Bacterial Biothreat Pathogens by Nanopore Sequencing</a> <i>Scientific Reports</i> 9: 13501. doi: 10.1038/s41598-019-49700-1.
 """
 
+	# prints disclaimer
 	disclaimer = """<p align=justify style="background-color:#F0F8F5;
 border-radius:4px;
 font-size:16px;
@@ -414,14 +448,19 @@ margin:5px;">
 """
 
 	with open(fname, "a") as outfile:
+		# print header for all files
 		print(html_header, file = outfile)
+		# print title for all files
 		print(html_title, file = outfile)
 		
 		# blacklist results	
 		if len(blacklist.keys()) == 0:
+			# print this if no blacklisted genes are detected
 			print(html_blacklist_false, file = outfile)
 		else:
+			# print this if blacklisted genes are detected
 			print(html_blacklist_true, file = outfile)
+			# print a table with one row per detected blacklisted gene
 			for key in blacklist.keys():
 				val = blacklist[key]
 				print("<tr>", file = outfile)
@@ -429,23 +468,30 @@ margin:5px;">
 				print("<td>" + val + "</td>", file = outfile)
 				print("</tr>", file = outfile)
 			print("</table>", file = outfile)
+			# print blacklisted gene information
 			print(html_blacklist_true_boxes, file = outfile)
 
 		# GTDB results
+		# print GTDB header for all files
 		print(gtdb_header, file = outfile)
+		# print a table with GTDB results
 		print("<tr>", file = outfile)
 		print("<td>{0}</td>".format(prefix), file = outfile)
 		print("<td><i>{0}</i></td>".format(gtdb), file = outfile)
 		print("</tr>", file = outfile)
 		print("</table>", file = outfile)
+		# print GTDB information
 		print(gtdb_box, file = outfile)
 
 		# VFDB results
+		# print VFDB header
 		print('<h2 id="vfdb">VFDB Virulence Factors</h2>', file = outfile)
 		if len(vfdist) == 0:
+			# print this if no VFs detected
 			print("<h3>No VFDB virulence factors detected.</h3>", file = outfile)
 			print(vfdb_box_false, file = outfile)
 		else:
+			# print table of VFs if VFs detected
 			print(gene_header, file = outfile)
 			for vline in vfdist:
 				# blast_header = ["Gene", "Contig", "Percent (%) Nucleotide Identity", "Alignment Length", "Mismatches", "Gaps", "Query Start", "Query End", "Subject Start", "Subject End", "E-Value", "Bit Score",  "Identical Matches", "Query Length"]
@@ -463,16 +509,21 @@ margin:5px;">
 					print("<td>" + vfi.strip() + "</td>", file = outfile)
 				print("</tr>", file = outfile)
 			print("</table>", file = outfile)
+			# print VFDB information
 			print(vfdb_box_true, file = outfile)
 
 
 		# AMR results
+		# print AMR header
 		print('<h2 id="amr">Pima AMR Genes</h2>', file = outfile)
 		if len(amrdist) == 0:
+			# print this if no AMR genes detected
 			print("<h3>No Pima AMR genes detected.</h3>", file = outfile)
 			print(amr_box_false, file = outfile)
 		else:
+			# print this if AMR genes detected
 			print(gene_header, file = outfile)
+			# print table of AMR genes
 			for aline in amrdist:
 				# blast_header = ["Gene", "Contig", "Percent (%) Nucleotide Identity", "Alignment Length", "Mismatches", "Gaps", "Query Start", "Query End", "Subject Start", "Subject End", "E-Value", "Bit Score",  "Identical Matches", "Query Length"]
 				# lc_header = ["Query Coverage", "Annotation", "Comparison to Publicly Available Genomes"]
@@ -489,8 +540,10 @@ margin:5px;">
 					print("<td>" + afi.strip() + "</td>", file = outfile)
 				print("</tr>", file = outfile)
 			print("</table>", file = outfile)
+			# print AMR information
 			print(amr_box_true, file = outfile)	
 
+		# print disclaimer
 		print('<h2 id="disclaimer">Disclaimer</h2>', file = outfile)	
 		print(disclaimer, file = outfile)		
 		print("</div>", file = outfile)
@@ -517,6 +570,7 @@ def main():
 
 	parser.add_argument("-o", "--output", help = "Path to desired output HTML file", nargs = 1, required = True)
 
+	# parse arguments and run pipeline
 	args = parser.parse_args()
 	my_gtdb = get_gtdb(args.gtdb[0])
 	my_vf = get_blast(args.virulence[0])
