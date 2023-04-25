@@ -2,9 +2,9 @@
 Materials for the LRNRisk project
 
 ## lrnrisk_prototype.py
-Python script producing LRNRisk HTML file for a single genome
+Python script producing LRNRisk TSVs for a single genome
 ```
-usage: lrnrisk_prototype.py -v </path/to/vfdb_output.tab> -a </path/to/pima_amr_output.tab> -o </path/to/output/directory/> [other options]
+usage: lrnrisk_prototype.py -v </path/to/vfdb_output.tab> -a </path/to/pima_amr_output.tab> -o </path/to/output/directory/prefix> [other options]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -19,17 +19,17 @@ optional arguments:
   -da AMR_DISTRIBUTION, --amr_distribution AMR_DISTRIBUTION
                         Path to tab-separated file containing AMR determinant distribution
   -o OUTPUT, --output OUTPUT
-                        Path to desired output HTML file
+                        Path to desired output directory, plus a prefix for the output files
 ```
 
 ## lrnrisk_test.sh
 Sample command to run lrnrisk_prototype.py:
 ```
-python lrnrisk_prototype.py --gtdb gtdb_example/gtdbtk.bac120.summary.tsv --virulence pima_example/pima_output/vfdb_core.fasta.tabular --amr pima_example/pima_output/AMR_pima_md_2023_02_02.fasta.tabular --blacklist lrnrisk_prototype_blacklist.tsv --vf_distribution vfdb_dist_beta_80p80q.tsv --amr_distribution resfinder_dist_beta_80p80q.tsv --output test.html
+python lrnrisk_prototype.py --gtdb gtdb_example/gtdbtk.bac120.summary.tsv --virulence pima_example/pima_output/vfdb_core.fasta.tabular --amr pima_example/pima_output/AMR_pima_md_2023_02_02.fasta.tabular --blacklist lrnrisk_prototype_blacklist.tsv --vf_distribution vfdb_dist_beta_80p80q.tsv --amr_distribution resfinder_dist_beta_80p80q.tsv --output test
 ```
 
 ## lrnrisk_logo.jpg
-LRNRisk logo (displayed when users open HTML output file)
+LRNRisk logo
 
 ## test.html
 Sample output file produced by LRNRisk
