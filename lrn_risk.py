@@ -92,6 +92,7 @@ def gene_dist(f, blast, gtdb):
     annd = {}
     gtdbd = {}
     finallines = []
+    warnings = []
     with open(f, 'r') as fh:
         for line in fh:
             try:
@@ -130,13 +131,15 @@ def gene_dist(f, blast, gtdb):
             elif gtdb != '(Unknown Species)':
                 ann = annd[key]
                 denom = gtdbd[gtdb]
-                freetext = 'WARNING*': Gene {0} ({1}) has never been detected in species {2} (n={3} genomes queried)! Interpret with caution!'.format(key, ann, gtdb, denom)
+                freetext = "*WARNING"
+                warnings.append("*WARNING: This gene has never been detected in this species! Interpret with caution!")
             else:
                 ann = annd[key]
-                freetext = 'WARNING**': Genome belongs to an undescribed species. Interpret with caution!'
+                freetext = "**WARNING"
+                warnings.append("**WARNING: This genome belongs to an undescribed species. Interpret with caution!")
             finalline = '%s\t%s\t%s' % (bv, ann, freetext)
             finallines.append(finalline)
-    return finallines
+    return [finallines, warnings]
 
 
 def output_blacklist(blacklist, blacklist_output_file):
@@ -152,13 +155,12 @@ def output_blacklist(blacklist, blacklist_output_file):
             # print a table with one row per detected blacklisted gene
             for key in blacklist.keys():
                 val = blacklist[key]
-                fh.write('%s\t%s\tHIGH RISK\n' % (key, val))
+                fh.write('%s\t%s\tHIGH RISK\n' % (key.strip(), val.strip()))
 
 
-def output_vfdb(vfdist, vfdb_output_file):
+def output_vfdb(vfdist, vfdb_output_file, vf_warnings):
     # takes distribution of virulence factors as input (vfdist)
-    # VFDB results
-    vwarnings = []
+    # VFDB results 
     with open(vfdb_output_file, 'w') as fh:
         fh.write('%s\n' % '\t'.join(VFDB_HEADER))
         if len(vfdist) == 0:
@@ -177,14 +179,16 @@ def output_vfdb(vfdist, vfdb_output_file):
                 veval = items[-7]
                 vann = items[-2]
                 vnotes = items[-1]
-                if "WARNING" in vnotes:
-                    vwarnings.append(vnotes.strip())
                 vfinal = [vgene, vcontig, vid, vcov, veval, vann, vnotes]
-                vfinal = '\t'.join(vfinal)
+                vfinal = '\t'.join([vitem.strip() for vitem in vfinal])
                 fh.write('%s\n' % vfinal)
+            for vfw in sorted(vf_warnings, key = lambda x: x.count('*')):
+                fh.write('%s\n' % vfw)
 
+                
+            
 
-def output_amr(amrdist, amr_output_file):
+def output_amr(amrdist, amr_output_file, amr_warnings):
     # takes distribution of AMR genes as input (amrdist)
     # AMR results
     with open(amr_output_file, 'w') as fh:
@@ -206,8 +210,10 @@ def output_amr(amrdist, amr_output_file):
                 aann = items[-2]
                 anotes = items[-1]
                 afinal = [agene, acontig, aid, acov, aeval, aann, anotes]
-                afinal = '\t'.join(afinal)
+                afinal = '\t'.join([aitem.strip() for aitem in afinal])
                 fh.write('%s\n' % afinal)
+            for amrw in sorted(amr_warnings, key = lambda x: x.count('*')):
+                fh.write('%s\n' % amrw)
 
 
 # lrnrisk_prototype arguments
@@ -234,8 +240,12 @@ blacklist = get_blacklist(virulence_genes, args.blacklist_file)
 output_blacklist(blacklist, args.blacklist_output_file)
 
 vf_distribution = gene_dist(args.vf_distribution_file, virulence_genes, species)
-output_vfdb(vf_distribution, args.vfdb_output_file)
+vf_warnings = vf_distribution[1]
+vf_distribution = vf_distribution[0]
+output_vfdb(vf_distribution, args.vfdb_output_file, vf_warnings)
 
 amr_genes = get_blast_genes(args.amr_determinants_file)
 amr_distribution = gene_dist(args.amr_distribution_file, amr_genes, species)
-output_amr(amr_distribution, args.amr_output_file)
+amr_warnings = amr_distribution[1]
+amr_distribution = amr_distribution[0]
+output_amr(amr_distribution, args.amr_output_file, amr_warnings)
