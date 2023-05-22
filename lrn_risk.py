@@ -4,7 +4,7 @@ import argparse
 
 
 BLACKLIST_HEADER = ['Blacklisted Gene', 'Reason', 'Risk Category']
-VFDB_HEADER = ['Gene', 'Contig', '% Identity', '% Coverage', 'E-Value', 'Annotation', 'Comparison to Publicly Available Genomes']
+VFDB_HEADER = ['Gene', 'Contig', '%ID', '%COV', 'E', 'Annotation', 'Distribution']
 
 
 def get_species_from_gtdb(f):
@@ -126,14 +126,14 @@ def gene_dist(f, blast, gtdb):
                 perc = items[4]
                 perc = str(round(float(perc), 2))
                 ann = items[-1]
-                freetext = 'Gene {0} has been detected in {1}% of {2} genomes ({3} of {4} genomes queried)'.format(gene, perc, tax, pres, denom)
+                freetext = '{0}/{1} ({2}%)'.format(pres, denom, perc)
             elif gtdb != '(Unknown Species)':
                 ann = annd[key]
                 denom = gtdbd[gtdb]
-                freetext = 'WARNING: Gene {0} ({1}) has never been detected in species {2} (n={3} genomes queried)! Interpret with caution!'.format(key, ann, gtdb, denom)
+                freetext = 'WARNING*': Gene {0} ({1}) has never been detected in species {2} (n={3} genomes queried)! Interpret with caution!'.format(key, ann, gtdb, denom)
             else:
                 ann = annd[key]
-                freetext = 'WARNING: Genome belongs to an undescribed species. Interpret with caution!'
+                freetext = 'WARNING**': Genome belongs to an undescribed species. Interpret with caution!'
             finalline = '%s\t%s\t%s' % (bv, ann, freetext)
             finallines.append(finalline)
     return finallines
@@ -158,6 +158,7 @@ def output_blacklist(blacklist, blacklist_output_file):
 def output_vfdb(vfdist, vfdb_output_file):
     # takes distribution of virulence factors as input (vfdist)
     # VFDB results
+    vwarnings = []
     with open(vfdb_output_file, 'w') as fh:
         fh.write('%s\n' % '\t'.join(VFDB_HEADER))
         if len(vfdist) == 0:
@@ -176,6 +177,8 @@ def output_vfdb(vfdist, vfdb_output_file):
                 veval = items[-7]
                 vann = items[-2]
                 vnotes = items[-1]
+                if "WARNING" in vnotes:
+                    vwarnings.append(vnotes.strip())
                 vfinal = [vgene, vcontig, vid, vcov, veval, vann, vnotes]
                 vfinal = '\t'.join(vfinal)
                 fh.write('%s\n' % vfinal)
