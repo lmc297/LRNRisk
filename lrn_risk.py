@@ -36,6 +36,7 @@ def get_blast_genes(f):
     with open(f, 'r') as fh:
         for line in fh:
             try:
+                line = line.strip()
                 items = line.split('\t')
                 gene = items[0]
                 # contig = items[1]
@@ -64,6 +65,7 @@ def get_blacklist(v, b):
     with open(b, 'r') as fh:
         for line in fh:
             try:
+                line = line.strip()
                 items = line.split('\t')
                 gene = items[0]
                 val = items[1]
@@ -96,6 +98,7 @@ def gene_dist(f, blast, gtdb):
     with open(f, 'r') as fh:
         for line in fh:
             try:
+                line = line.strip()
                 items = line.split('\t')
                 tax = items[0]
                 tax = tax.split('s__')[1]
@@ -137,8 +140,7 @@ def gene_dist(f, blast, gtdb):
                 ann = annd[key]
                 freetext = "**WARNING"
                 warnings.append("**WARNING: This genome belongs to an undescribed species. Interpret with caution!")
-            finalline = '%s\t%s\t%s' % (bv, ann, freetext)
-            finallines.append(finalline)
+            finallines.append('%s\t%s\t%s' % (bv, ann, freetext))
     return [finallines, warnings]
 
 
@@ -155,12 +157,12 @@ def output_blacklist(blacklist, blacklist_output_file):
             # print a table with one row per detected blacklisted gene
             for key in blacklist.keys():
                 val = blacklist[key]
-                fh.write('%s\t%s\tHIGH RISK\n' % (key.strip(), val.strip()))
+                fh.write('%s\t%s\tHIGH RISK\n' % (key, val))
 
 
 def output_vfdb(vfdist, vfdb_output_file, vf_warnings):
     # takes distribution of virulence factors as input (vfdist)
-    # VFDB results 
+    # VFDB results
     with open(vfdb_output_file, 'w') as fh:
         fh.write('%s\n' % '\t'.join(VFDB_HEADER))
         if len(vfdist) == 0:
@@ -180,13 +182,10 @@ def output_vfdb(vfdist, vfdb_output_file, vf_warnings):
                 vann = items[-2]
                 vnotes = items[-1]
                 vfinal = [vgene, vcontig, vid, vcov, veval, vann, vnotes]
-                vfinal = '\t'.join([vitem.strip() for vitem in vfinal])
-                fh.write('%s\n' % vfinal)
-            for vfw in sorted(vf_warnings, key = lambda x: x.count('*')):
+                fh.write('%s\n' % '\t'.join(vfinal))
+            for vfw in sorted(vf_warnings, key=lambda x: x.count('*')):
                 fh.write('%s\n' % vfw)
 
-                
-            
 
 def output_amr(amrdist, amr_output_file, amr_warnings):
     # takes distribution of AMR genes as input (amrdist)
@@ -210,9 +209,8 @@ def output_amr(amrdist, amr_output_file, amr_warnings):
                 aann = items[-2]
                 anotes = items[-1]
                 afinal = [agene, acontig, aid, acov, aeval, aann, anotes]
-                afinal = '\t'.join([aitem.strip() for aitem in afinal])
-                fh.write('%s\n' % afinal)
-            for amrw in sorted(amr_warnings, key = lambda x: x.count('*')):
+                fh.write('%s\n' % '\t'.join(afinal))
+            for amrw in sorted(amr_warnings, key=lambda x: x.count('*')):
                 fh.write('%s\n' % amrw)
 
 
