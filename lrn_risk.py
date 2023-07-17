@@ -82,7 +82,7 @@ def get_blacklist(v, b):
 def gene_dist(f, blast, gtdb):
     # get within-species prevalence of genes
     # for virulence factors (VFs): uses VFDB VFs detected via ABRicate's VFDB db
-    # for AMR genes: uses AMR genes detected via ABRicate's ResFinder db
+    # for AMR genes: uses AMR genes detected via ABRicate + PIMA db
     # for VFs and AMR genes: genes were detected via ABRicate XXX
     # minimum nucleotide identity and coverage values >=80%
     # total of 61,161 genomes queried
