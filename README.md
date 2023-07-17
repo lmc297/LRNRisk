@@ -25,7 +25,7 @@ optional arguments:
 ## lrnrisk_test.sh
 Sample command to run lrnrisk_prototype.py:
 ```
-python lrnrisk_prototype.py --gtdb gtdb_example/gtdbtk.bac120.summary.tsv --virulence pima_example/pima_output/vfdb_core.fasta.tabular --amr pima_example/pima_output/AMR_pima_md_2023_02_02.fasta.tabular --blacklist lrnrisk_prototype_blacklist.tsv --vf_distribution vfdb_dist_beta_80p80q.tsv --amr_distribution resfinder_dist_beta_80p80q.tsv --output test
+python lrnrisk_prototype.py --gtdb gtdb_example/gtdbtk.bac120.summary.tsv --virulence pima_example/pima_output/vfdb_core.fasta.tabular --amr pima_example/pima_output/AMR_pima_md_2023_02_02.fasta.tabular --blacklist lrnrisk_prototype_blacklist.tsv --vf_distribution vfdb_dist_beta_80p80q.tsv --amr_distribution pima_dist_beta_80p80q.tsv --output test
 ```
 
 ## lrnrisk_logo.jpg
@@ -40,7 +40,7 @@ Sample output file produced by LRNRisk
 ## vfdb_dist_beta_80p80q.tsv
 Virulence factors detected in publicly available genomes, broken down by species; supplied to `lrnrisk_prototype.py --vf_distribution` 
 
-## resfinder_dist_beta_80p80q.tsv
+## pima_dist_beta_80p80q.tsv
 Antimicrobial resistance (AMR) determinants detected in publicly available genomes, broken down by species; supplied to `lrnrisk_prototype.py --amr_distribution`
 
 ## gtdb_example/gtdbtk.bac120.summary.tsv
